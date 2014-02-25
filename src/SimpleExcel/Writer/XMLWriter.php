@@ -33,6 +33,14 @@ class XMLWriter extends BaseWriter implements IWriter
      * @var     array
      */
     private $doc_prop;
+    
+    /**
+     * Array containing document styles
+     *
+     * @access  private
+     * @var     array
+     */
+    private $doc_styles;
 
     /**
      * @return  void
@@ -46,6 +54,7 @@ class XMLWriter extends BaseWriter implements IWriter
             'LastAuthor' => 'SimpleExcel',
             'Version' => '12.00'
         );
+        $this->doc_prop = array();
     }
 
     /**
@@ -113,8 +122,21 @@ class XMLWriter extends BaseWriter implements IWriter
   <'.$propname.'>'.$propval.'</'.$propname.'>';
         }
 
-        $content .= '
- </DocumentProperties>
+  $content .= '
+ </DocumentProperties>';
+  
+  if (count($this->doc_styles)){
+    $content .= '
+ <Styles>';
+    foreach ($this->doc_styles as $style_content){
+      $content .= '
+  ' . $style_content;
+    }
+    $content .= '
+ </Styles>';
+  }
+        
+ $content .= '
  <Worksheet ss:Name="Sheet1">
   <Table>'.$this->tabl_data.'
   </Table>
@@ -150,6 +172,33 @@ class XMLWriter extends BaseWriter implements IWriter
     */
     public function setDocProp($prop, $val){
         $this->doc_prop[$prop] = $val;
+    }
+    
+    /**
+    * Set a document style
+    *
+    * @param    string  $style_id           The style id
+    * @param    string  $style_elements     Style elements
+    * @return   void
+    */
+    public function setDocStyle($style_id, $style_elements){
+        $style_elements_content = '';
+        if (is_array($style_elements) && count($style_elements)){
+          foreach ($style_elements as $style_element_name => $style_element_properties){
+            $properties = array();
+            if (is_array($style_element_properties) && count($style_element_properties)){
+              foreach ($style_element_properties as $property_name => $property_value){
+                $properties[] = 'ss:' . $property_name .'="' . $property_value . '"';
+              }
+            }
+            $style_elements_content .= '
+     <' . $style_element_name . ' ' . implode(' ', $properties) . '/>';
+          }
+        }
+        if (!empty($style_elements_content)){
+          $this->doc_styles[] = '<Style ss:ID="' . $style_id . '">' . $style_elements_content . '
+  </Style>';
+        }
     }
 }
 ?>
