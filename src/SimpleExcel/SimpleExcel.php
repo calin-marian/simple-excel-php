@@ -37,10 +37,11 @@ namespace SimpleExcel;
 
 use  SimpleExcel\Exception\SimpleExcelException;
 
-if (!class_exists('Composer\\Autoload\\ClassLoader', false)){
+if (!class_exists('Composer\\Autoload\\ClassLoader', false) && (strpos($class_name, 'SimpleExcel') !== FALSE )){
     // autoload all interfaces & classes
     spl_autoload_register(function($class_name){
-        if($class_name != 'SimpleExcel') require_once(dirname(__FILE__).DIRECTORY_SEPARATOR.str_replace('\\', DIRECTORY_SEPARATOR, substr($class_name, strlen('SimpleExcel\\'))).'.php');
+        $filename = dirname(__FILE__).DIRECTORY_SEPARATOR.str_replace('\\', DIRECTORY_SEPARATOR, substr($class_name, strlen('SimpleExcel\\'))).'.php';
+        if($class_name != 'SimpleExcel' && file_exists($filename)) require_once($filename);
     });
 }
 
