@@ -77,7 +77,7 @@ class XMLWriter extends BaseWriter implements IWriter
             // check if given variable contains array
             if(is_array($val) && isset($val['value'])){
                 $value = $val['value'];
-                $datatype = isset($val['datatype']) ? $val['datatype'] : is_string($val['value']) ? 'String' : (is_numeric($val['value']) ? 'Number' : 'String');
+                $datatype = isset($val['datatype']) ? $val['datatype'] : (is_string($val['value']) ? 'String' : ((is_numeric($val['value']) ? 'Number' : 'String')));
                 $cell_attributes = isset($val['cell_attributes']) ? $val['cell_attributes'] : '';
             } elseif(is_array($val)){
                 $value = $val[0];
