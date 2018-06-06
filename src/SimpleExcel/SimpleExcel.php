@@ -35,7 +35,7 @@
 
 namespace SimpleExcel;
 
-use  SimpleExcel\Exception\SimpleExcelException;
+use SimpleExcel\Exception\SimpleExcelException;
 
 if (!class_exists('Composer\\Autoload\\ClassLoader', false)){
     // autoload all interfaces & classes
